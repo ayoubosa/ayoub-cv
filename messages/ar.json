@@ -1,0 +1,87 @@
+{
+  "nav": {
+    "home": "الرئيسية",
+    "about": "عنّي",
+    "skills": "المهارات",
+    "experience": "الخبرات",
+    "projects": "المشاريع",
+    "services": "الخدمات",
+    "testimonials": "التوصيات",
+    "blog": "المدونة",
+    "contact": "اتصل بي",
+    "admin": "لوحة التحكم"
+  },
+  "hero": {
+    "download_cv": "تحميل السيرة الذاتية",
+    "contact_me": "اتصل بي",
+    "view_projects": "عرض المشاريع"
+  },
+  "about": {
+    "title": "عنّي",
+    "years_experience": "سنوات الخبرة",
+    "projects_completed": "المشاريع المنجزة",
+    "technologies": "التقنيات",
+    "clients_served": "العملاء"
+  },
+  "skills": {
+    "title": "المهارات والخبرات"
+  },
+  "experience": {
+    "title": "الخبرات"
+  },
+  "education": {
+    "title": "التعليم"
+  },
+  "projects": {
+    "title": "المشاريع",
+    "all": "الكل",
+    "view_github": "GitHub",
+    "view_live": "عرض مباشر",
+    "view_details": "التفاصيل"
+  },
+  "services": {
+    "title": "الخدمات"
+  },
+  "testimonials": {
+    "title": "التوصيات"
+  },
+  "blog": {
+    "title": "المدونة",
+    "read_more": "اقرأ المزيد",
+    "categories": "التصنيفات",
+    "tags": "الوسوم"
+  },
+  "contact": {
+    "title": "تواصل معي",
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "subject": "الموضوع",
+    "message": "رسالتك",
+    "send": "إرسال",
+    "sending": "جارٍ الإرسال...",
+    "success": "تم إرسال الرسالة بنجاح!",
+    "error": "حدث خطأ. حاول مرة أخرى."
+  },
+  "footer": {
+    "copyright": "جميع الحقوق محفوظة."
+  },
+  "admin": {
+    "login": "تسجيل الدخول",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "sign_in": "تسجيل الدخول",
+    "dashboard": "لوحة التحكم",
+    "logout": "تسجيل الخروج"
+  },
+  "theme": {
+    "light": "فاتح",
+    "dark": "داكن"
+  },
+  "gdpr": {
+    "title": "الموافقة على ملفات تعريف الارتباط",
+    "message": "نستخدم ملفات تعريف الارتباط لتحليل حركة المرور وتحسين تجربتك.",
+    "accept_all": "قبول الكل",
+    "reject": "رفض",
+    "customize": "تخصيص"
+  }
+}

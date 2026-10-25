@@ -1,0 +1,235 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+// ─── Auth ───
+model AdminUser {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Profile ───
+model Profile {
+  id          String   @id @default(cuid())
+  name        String
+  title       String
+  nationality String
+  locations   String
+  email       String
+  phones      String
+  about       String
+  photo       String?
+  resumeFile  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ─── Hero Stats ───
+model HeroStat {
+  id    String @id @default(cuid())
+  label String
+  value String
+  order Int    @default(0)
+}
+
+// ─── Skills ───
+model Skill {
+  id       String @id @default(cuid())
+  name     String
+  category String // e.g. "Frontend", "Backend", "AI", "Tools"
+  level    Int    // 1–100
+  order    Int    @default(0)
+}
+
+// ─── Experience ───
+model Experience {
+  id        String   @id @default(cuid())
+  company   String
+  role      String
+  startDate DateTime
+  endDate   DateTime?
+  current   Boolean  @default(false)
+  description String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Education ───
+model Education {
+  id          String   @id @default(cuid())
+  institution String
+  degree      String
+  field       String
+  startDate   DateTime
+  endDate     DateTime?
+  current     Boolean  @default(false)
+  description String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ─── Services ───
+model Service {
+  id          String @id @default(cuid())
+  title       String
+  description String
+  icon        String
+  order       Int    @default(0)
+}
+
+// ─── Projects ───
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  images      String  // JSON array of URLs
+  techBadges  String  // JSON array of strings
+  githubUrl   String?
+  liveUrl     String?
+  category    String
+  featured    Boolean  @default(false)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ─── Testimonials ───
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  role      String?
+  company   String?
+  content   String
+  avatar    String?
+  rating    Int?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+// ─── Social Links ───
+model SocialLink {
+  id    String @id @default(cuid())
+  platform String // LinkedIn, GitHub, TikTok, Instagram, WhatsApp, X, Facebook
+  url   String
+  icon  String?
+  order Int    @default(0)
+}
+
+// ─── Theme Settings ───
+model ThemeSettings {
+  id          String @id @default(cuid())
+  primaryColor    String @default("#0ea5e9")
+  secondaryColor  String @default("#8b5cf6")
+  accentColor     String @default("#f59e0b")
+  backgroundColor String @default("#0a0a0a")
+  textColor       String @default("#fafafa")
+  fontFamily      String @default("Inter")
+  borderRadius    String @default("0.5rem")
+  darkMode        Boolean @default(true)
+}
+
+// ─── Blog ───
+model BlogCategory {
+  id       String       @id @default(cuid())
+  name     String       @unique
+  slug     String       @unique
+  posts    BlogPost[]
+}
+
+model BlogTag {
+  id    String       @id @default(cuid())
+  name  String       @unique
+  slug  String       @unique
+  posts BlogPost[]
+}
+
+model BlogPost {
+  id          String        @id @default(cuid())
+  title       String
+  slug        String        @unique
+  excerpt     String?
+  content     String
+  coverImage  String?
+  published   Boolean       @default(false)
+  featured    Boolean       @default(false)
+  categoryId  String?
+  category    BlogCategory? @relation(fields: [categoryId], references: [id])
+  tags        BlogTag[]
+  seoTitle       String?
+  seoDescription String?
+  ogImage        String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+// ─── Smart Links ───
+model SmartLink {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  sourceLabel String
+  target    String
+  clicks    LinkClick[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LinkClick {
+  id        String   @id @default(cuid())
+  smartLinkId String
+  smartLink SmartLink @relation(fields: [smartLinkId], references: [id])
+  timestamp DateTime  @default(now())
+  referrer  String?
+  country   String?
+  device    String?
+  browser   String?
+}
+
+// ─── Gallery ───
+model GalleryImage {
+  id        String   @id @default(cuid())
+  url       String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model GalleryStats {
+  id        String @id @default(cuid())
+  likeCount Int    @default(0)
+}
+
+// ─── Analytics ───
+model PageView {
+  id        String   @id @default(cuid())
+  path      String
+  referrer  String?
+  country   String?
+  device    String?
+  browser   String?
+  sessionId String?
+  duration  Int?
+  timestamp DateTime @default(now())
+}
+
+model AnalyticsEvent {
+  id        String   @id @default(cuid())
+  eventType String   // "pageview", "click", "custom"
+  path      String?
+  referrer  String?
+  country   String?
+  device    String?
+  browser   String?
+  sessionId String?
+  metadata  String?  // JSON for extra data
+  timestamp DateTime @default(now())
+}

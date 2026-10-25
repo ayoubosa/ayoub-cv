@@ -1,0 +1,87 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "skills": "Skills",
+    "experience": "Experience",
+    "projects": "Projects",
+    "services": "Services",
+    "testimonials": "Testimonials",
+    "blog": "Blog",
+    "contact": "Contact",
+    "admin": "Admin"
+  },
+  "hero": {
+    "download_cv": "Download CV",
+    "contact_me": "Contact Me",
+    "view_projects": "View Projects"
+  },
+  "about": {
+    "title": "About Me",
+    "years_experience": "Years of Experience",
+    "projects_completed": "Projects Completed",
+    "technologies": "Technologies",
+    "clients_served": "Clients Served"
+  },
+  "skills": {
+    "title": "Skills & Expertise"
+  },
+  "experience": {
+    "title": "Experience"
+  },
+  "education": {
+    "title": "Education"
+  },
+  "projects": {
+    "title": "Projects",
+    "all": "All",
+    "view_github": "GitHub",
+    "view_live": "Live Demo",
+    "view_details": "View Details"
+  },
+  "services": {
+    "title": "Services"
+  },
+  "testimonials": {
+    "title": "Testimonials"
+  },
+  "blog": {
+    "title": "Blog",
+    "read_more": "Read More",
+    "categories": "Categories",
+    "tags": "Tags"
+  },
+  "contact": {
+    "title": "Get In Touch",
+    "name": "Your Name",
+    "email": "Your Email",
+    "subject": "Subject",
+    "message": "Your Message",
+    "send": "Send Message",
+    "sending": "Sending...",
+    "success": "Message sent successfully!",
+    "error": "Something went wrong. Please try again."
+  },
+  "footer": {
+    "copyright": "All rights reserved."
+  },
+  "admin": {
+    "login": "Admin Login",
+    "email": "Email",
+    "password": "Password",
+    "sign_in": "Sign In",
+    "dashboard": "Dashboard",
+    "logout": "Logout"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "gdpr": {
+    "title": "Cookie Consent",
+    "message": "We use cookies to analyze site traffic and improve your experience.",
+    "accept_all": "Accept All",
+    "reject": "Reject",
+    "customize": "Customize"
+  }
+}
