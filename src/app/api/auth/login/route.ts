@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { prisma } from "@/lib/db";
 import { findAdminByEmail, verifyPassword, signAccessToken, signRefreshToken } from "@/lib/auth";
 
 const loginSchema = z.object({
@@ -7,57 +8,47 @@ const loginSchema = z.object({
   password: z.string().min(1),
 });
 
-// Simple in-memory rate limiter
-const rateLimit = new Map<string, { count: number; resetAt: number }>();
-const RATE_LIMIT_MAX = 5;
-const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
+// Failed attempts per address, stored in the database so every server instance sees the same count
+const MAX_FAILURES = 5;
+const WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = rateLimit.get(ip);
-  if (!entry || now > entry.resetAt) {
-    rateLimit.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW });
-    return true;
-  }
-  if (entry.count >= RATE_LIMIT_MAX) return false;
-  entry.count++;
-  return true;
+// Compared against when the email is unknown, so both cases take the same time
+const DUMMY_HASH = "$2b$12$Uk3ODiP8yljYEsQ8DeP/IeEbKhZdT38juHOU4xdepVl3eD/mpdxA.";
+
+function clientIp(req: NextRequest): string {
+  return req.headers.get("x-forwarded-for")?.split(",")[0].trim() || req.headers.get("x-real-ip") || "unknown";
 }
 
 export async function POST(req: NextRequest) {
-  const ip = req.headers.get("x-forwarded-for") || "unknown";
-  if (!checkRateLimit(ip)) {
+  const ip = clientIp(req);
+  const since = new Date(Date.now() - WINDOW_MS);
+  const failures = await prisma.loginAttempt.count({ where: { ip, createdAt: { gt: since } } });
+  if (failures >= MAX_FAILURES) {
     return NextResponse.json(
-      { error: "Too many requests. Try again later." },
+      { error: "Too many attempts. Try again in 15 minutes." },
       { status: 429 }
     );
   }
 
-  const body = await req.json();
-  const parsed = loginSchema.safeParse(body);
+  const parsed = loginSchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) {
-    return NextResponse.json(
-      { error: "Invalid input", details: parsed.error.flatten() },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "Enter your email and password" }, { status: 400 });
   }
 
   const { email, password } = parsed.data;
   const admin = await findAdminByEmail(email);
-  if (!admin) {
+  const valid = await verifyPassword(password, admin?.password ?? DUMMY_HASH);
+  if (!admin || !valid) {
+    await prisma.loginAttempt.create({ data: { ip } });
+    await prisma.loginAttempt.deleteMany({ where: { createdAt: { lt: since } } });
+    const left = MAX_FAILURES - failures - 1;
     return NextResponse.json(
-      { error: "Invalid credentials" },
+      { error: left > 0 ? `Invalid credentials. ${left} ${left === 1 ? "try" : "tries"} left.` : "Too many attempts. Try again in 15 minutes." },
       { status: 401 }
     );
   }
 
-  const valid = await verifyPassword(password, admin.password);
-  if (!valid) {
-    return NextResponse.json(
-      { error: "Invalid credentials" },
-      { status: 401 }
-    );
-  }
+  await prisma.loginAttempt.deleteMany({ where: { ip } });
 
   const payload = { id: admin.id, email: admin.email };
   const accessToken = signAccessToken(payload);

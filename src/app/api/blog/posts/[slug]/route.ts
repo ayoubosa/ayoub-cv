@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { getAuthUser } from "@/lib/auth";
 
 export async function GET(
   _req: NextRequest,
@@ -10,7 +11,8 @@ export async function GET(
     include: { category: true, tags: true },
   });
 
-  if (!post) {
+  // Drafts are only visible to the signed-in admin
+  if (!post || (!post.published && !(await getAuthUser()))) {
     return NextResponse.json({ error: "Post not found" }, { status: 404 });
   }
 

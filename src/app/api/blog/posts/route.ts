@@ -29,6 +29,8 @@ export async function GET(req: NextRequest) {
   if (categoryId) where.categoryId = categoryId;
   if (tagId) where.tags = { some: { id: tagId } };
   if (published !== null) where.published = published === "true";
+  // Drafts are only visible to the signed-in admin
+  if (!(await getAuthUser())) where.published = true;
 
   const posts = await prisma.blogPost.findMany({
     where,

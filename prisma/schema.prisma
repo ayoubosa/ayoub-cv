@@ -17,6 +17,15 @@ model AdminUser {
   updatedAt DateTime @updatedAt
 }
 
+// Failed admin sign-ins, kept in the database so the limit holds across every server instance
+model LoginAttempt {
+  id        String   @id @default(cuid())
+  ip        String
+  createdAt DateTime @default(now())
+
+  @@index([ip, createdAt])
+}
+
 // ─── Profile ───
 model Profile {
   id          String   @id @default(cuid())
